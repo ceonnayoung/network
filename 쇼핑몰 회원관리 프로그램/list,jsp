@@ -1,0 +1,71 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@include file="dbconnect.jsp" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Index</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<jsp:include page="header.jsp" />
+<section>
+<h2><b>회원목록조회/수정</b></h2>
+<form>
+	<table>
+		<tr>
+			<td>회원번호</td>
+			<td>회원성명</td>
+			<td>전화번호</td>
+			<td>주소</td>
+			<td>가입입잘</td>
+			<td>고객등급</td>
+			<td>거주지역</td>
+		</tr>
+<%
+request.setCharacterEncoding("UTF-8");
+
+String grade="";
+try {
+	String sql = "select * from tbl_member_202205 order by custno";
+	PreparedStatement pstmt = conn.prepareStatement(sql);
+	ResultSet rs = pstmt.executeQuery(sql);
+	
+	while(rs.next()) {
+		grade = rs.getString(6);
+		switch(grade) {
+		case "A":
+			grade = "VIP";
+			break;
+		case "B":
+			grade = "일반";
+			break;
+		case "C":
+			grade = "직원";
+			break;
+		}
+%>
+	<tr>
+		<td> <a href="modify.jsp?custno=<%=rs.getString(1) %>">
+ <%=rs.getString(1) %> </a> </td>
+		<td><%=rs.getString(2) %></td>
+		<td><%=rs.getString(3) %></td>
+		<td><%=rs.getString(4) %></td>
+		<td><%=rs.getString(5) %></td>
+		<td><%=grade  %></td>
+		<td><%=rs.getString(7) %></td>
+		
+<%
+	}
+} catch(Exception e) {
+	e.printStackTrace();
+}
+%>
+	</table>
+</form>
+</section>
+
+<jsp:include page="footer.jsp" />
+</body>
+</html>
